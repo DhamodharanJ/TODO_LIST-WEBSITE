@@ -10,7 +10,7 @@ const app = express()
 const PORT = process.env.PORT;
 app.use(express.json())
 app.use(cors({
-    origin:["https://todo-list-website-7kua.onrender.com"],method:["GET","POST"],credentials:true
+    origin:["https://todo-list-website-7kua.onrender.com", "http://localhost:5173/"],method:["GET","POST"],credentials:true
 }))
 
 app.use(cookieParser()) 
