@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import '../signin.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
 function Signinpage({setUserLogin}) {
 
   const [userName, SetUserName] = useState('');
@@ -13,11 +14,13 @@ function Signinpage({setUserLogin}) {
 
   // const navigate=useNavigate();
 
+  const BASE_URL=import.meta.env.VITE_BASE_URL;
+
   const submit = function () {
     if (password === repeatPassword && password !== '' && userName != '') {
 
       if (goLogin) {
-        axios.post('http://localhost:3000/post-userdata', {
+        axios.post(`${BASE_URL}/post-userdata`, {
           username: userName,
           password: password,
         }).then((res) => {
@@ -33,7 +36,7 @@ function Signinpage({setUserLogin}) {
     
     else if(!goLogin){
 
-      axios.post('http://localhost:3000/post-login',{
+      axios.post(`${BASE_URL}/post-login`,{
         username:userName,
         password:password,
       },{withCredentials:true})

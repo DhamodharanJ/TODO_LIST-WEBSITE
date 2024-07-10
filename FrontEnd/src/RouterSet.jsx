@@ -9,8 +9,10 @@ function RouterSet() {
   const [list, setTodoData] = useState([]);
   const [loading,setLoading]=useState(true);
 
+  const BASE_URL=import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
-    axios.get('http://localhost:3000/get-data', { withCredentials: true })
+    axios.get(`${BASE_URL}/get-data`, { withCredentials: true })
       .then((res) => {
         setUserLogin(true)
         setLoading(false);

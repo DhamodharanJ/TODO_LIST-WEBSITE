@@ -11,8 +11,10 @@ function App(props) {
     setStatement(e.target.value);
   }
 
+  const BASE_URL=import.meta.env.VITE_BASE_URL;
+
 useEffect(()=>{
-  axios.get('http://localhost:3000/get-username',{withCredentials:true})
+  axios.get(`${BASE_URL}/get-username`,{withCredentials:true})
   .then((res)=>{
     setUsername(res.data);
   }).catch((error)=>{
@@ -28,7 +30,7 @@ const {list,setTodoData,loading,setUserLogin} = props
 
       try {
 
-        axios.post('http://localhost:3000/set-data', {
+        axios.post(`${BASE_URL}/set-data`, {
           list: statement
         }, { withCredentials: true })
           .then((res) => {
@@ -49,7 +51,7 @@ const {list,setTodoData,loading,setUserLogin} = props
     const newdata = prompt("Enter the value", list[updindex].list)
     if (newdata !== '' && newdata != null) {
       try {
-        axios.put(`http://localhost:3000/update-data/${id}`, {
+        axios.put(`${BASE_URL}/update-data/${id}`, {
           list: newdata,
         })
           .then((res) => {
@@ -71,7 +73,7 @@ const {list,setTodoData,loading,setUserLogin} = props
   function deleted(delindex, id) {
 
     try {
-      axios.delete(`http://localhost:3000/delete-data/${id}`).then((res) => {
+      axios.delete(`${BASE_URL}/delete-data/${id}`).then((res) => {
         const newdata = list.filter((value, index) => { return index !== delindex })
         setTodoData(newdata)
       }).catch((error) => {
@@ -84,7 +86,7 @@ const {list,setTodoData,loading,setUserLogin} = props
     }
   }
 function logout(){
-  axios.get('http://localhost:3000/user-logout',{withCredentials:true})
+  axios.get(`${BASE_URL}/user-logout`,{withCredentials:true})
   .then((res)=>{
     setUserLogin(false);
   })
