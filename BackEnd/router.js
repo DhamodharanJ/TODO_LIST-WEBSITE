@@ -123,7 +123,12 @@ router.post('/post-login', async (req, res) => {
 
         if (passcheck) {
             const token = jwt.sign({ username }, process.env.JWT_SECRET , { expiresIn: "1d" });
-            res.cookie('token', token, { maxAge: 900000, httpOnly: true });
+            res.cookie('token', token, { 
+                maxAge: 900000, 
+                httpOnly: true ,
+                secure: true,
+                sameSite: 'Lax'
+        });
             // console.log(token)
             return res.status(200).send("Login Successful");
         } else {
