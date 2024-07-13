@@ -8,6 +8,9 @@ import  { config }   from 'dotenv'
 config()
 
 
+
+
+
 const router = express.Router()
 // token checking method
 const verifyUser = async (req, res, next) => {
@@ -56,7 +59,7 @@ router.post('/set-data', verifyUser, async (req, res) => {
 });
 
 
-router.put('/update-data/:id', async (req, res) => {
+router.put('/update-data/:id', verifyUser, async (req, res) => {
     const { list } = req.body
     try {
         const data = await todoModel.findByIdAndUpdate(req.params.id, {
@@ -83,7 +86,7 @@ router.get('/get-data', verifyUser, async (req, res) => {
     }
 })
 
-router.delete('/delete-data/:id', async (req, res) => {
+router.delete('/delete-data/:id', verifyUser, async (req, res) => {
     try {
         const data = await todoModel.findByIdAndDelete(req.params.id)
         res.send("deleted Successfully")
@@ -94,6 +97,7 @@ router.delete('/delete-data/:id', async (req, res) => {
 })
 
 router.post('/post-userdata', async (req, res) => {
+    // console.log('called')
     const { username, password } = req.body;
     try {
         const existUser = await users.findOne({ username })
@@ -102,8 +106,9 @@ router.post('/post-userdata', async (req, res) => {
         }
         const hashpass = await bcrypt.hash(password, 10)
         const data = await users.create({ username, password: hashpass })
-
-        return (res.status(200).send("success"));
+        const token = jwt.sign({ username }, process.env.JWT_SECRET , { expiresIn: "1d" });
+        // console.log(token)
+        return res.status(200).json({token:token,message:"Signup Successful"});
     } catch (error) {
         return res.status(400).send(error)
     }

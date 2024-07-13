@@ -3,7 +3,7 @@ import '../signin.css'
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-function Signinpage({setUserLogin}) {
+function Signinpage({ setUserLogin }) {
 
   const [userName, SetUserName] = useState('');
   const [password, Setpassword] = useState('');
@@ -17,79 +17,74 @@ function Signinpage({setUserLogin}) {
   // console.log(BASE_URL)
 
   const submit = function () {
-    if (password === repeatPassword && password !== '' && userName != '') {
-
-      if (goLogin) {
-        axios.post(`${BASE_URL}/post-userdata`, {
-          username: userName,
-          password: password,
-        }).then((res) => {
-          setUserLogin(true)
-          login()
-        }).catch((error) => {
-          setValid(error.response.data)
-        })
-      } else {
-        setValid("Invalid Input")
-      }
-    } 
-    
-    else if(!goLogin){
-
-      axios.post(`${BASE_URL}/post-login`,{
-        username:userName,
-        password:password,
-      })
-      .then((res)=>{
-        console.log(res.data.token)
-        setValid(res.data.message)  
-        Cookies.set('token',res.data.token)
+    if (goLogin && password === repeatPassword && password !== '' && userName != '') {
+      // console.log('called')
+      axios.post(`${BASE_URL}/post-userdata`, {
+        username: userName,
+        password: password,
+      }).then((res) => {
+        // console.log(res.data.token)
         setUserLogin(true)
+        setValid(res.data.message)
+        Cookies.set('token', res.data.token)
+      }).catch((error) => {
+        setValid(error.response.data)
       })
-      .catch((error)=>{
-        // console.log(error)
-        setValid(error)
+    } else if (!goLogin && password !== '' && userName != '') {
+      axios.post(`${BASE_URL}/post-login`, {
+        username: userName,
+        password: password,
       })
+        .then((res) => {
+          // console.log(res.data.token)
+          setValid(res.data.message)
+          Cookies.set('token', res.data.token)
+          setUserLogin(true)
+        })
+        .catch((error) => {
+          // console.log(error)
+          setValid(error)
+        })
+    }
+    else {
+      setValid("Invalid Input")
+    }
   }
-  else {
-    setValid("Invalid Input")
+
+
+  function login() {
+    SetUserName('')
+    Setpassword('')
+    SetRepeatpassword('')
+    setValid('')
+    setGoLogin(!goLogin)
   }
-}
 
-
-function login() {
-  SetUserName('')
-  Setpassword('')
-  SetRepeatpassword('')
-  setValid('')
-  setGoLogin(!goLogin)
-}
-
-return (
-  <div id='signpage'>
-    <div className="sign">
-      <h1>{goLogin ? "Sign In" : "Login In"}</h1>
-      <div className="field">
-        <label>UserName:</label><input type='text' value={userName} onChange={(e) => { SetUserName(e.target.value) }}></input><br /><br /></div>
-      <div className="field">
-        <label>Password:</label><input type='password' value={password} onChange={(e) => { Setpassword(e.target.value) }}></input><br /><br /></div>
-      {
-        goLogin &&
+  return (
+    <div id='signpage'>
+      <div className="sign">
+        <h1>{goLogin ? "Sign In" : "Login In"}</h1>
         <div className="field">
-          <label>Repeat Password:</label><input type='password' value={repeatPassword} onChange={(e) => { SetRepeatpassword(e.target.value) }}></input><br /><br /></div>
-      }
-      {
-        <span style={{ fontSize: '1rem' }} ref={refValue}>{valid}</span>
-      }
+          <label>UserName:</label><input type='text' value={userName} onChange={(e) => { SetUserName(e.target.value) }}></input><br /><br /></div>
+        <div className="field">
+          <label>Password:</label><input type='password' value={password} onChange={(e) => { Setpassword(e.target.value) }}></input><br /><br /></div>
+        {
+          goLogin &&
+          <div className="field">
+            <label>Repeat Password:</label><input type='password' value={repeatPassword} onChange={(e) => { SetRepeatpassword(e.target.value) }}></input><br /><br /></div>
+        }
+        {
+          <span style={{ fontSize: '1rem' }} ref={refValue}>{valid}</span>
+        }
 
-      <button onClick={submit}>{goLogin ? "Sign In" : "Login In"}
-      </button>
+        <button onClick={submit}>{goLogin ? "Sign In" : "Login In"}
+        </button>
 
-      <p style={{ fontSize: '1rem' }}>{goLogin ? "If you already an account" : "Do you want to create an account"}</p><p style={{ color: 'blue' }} onClick={login}>{goLogin ? "Log In" : "Sign In"}</p>
+        <p style={{ fontSize: '1rem' }}>{goLogin ? "If you already an account" : "Do you want to create an account"}</p><p style={{ color: 'blue' }} onClick={login}>{goLogin ? "Log In" : "Sign In"}</p>
 
+      </div>
     </div>
-  </div>
-)
+  )
 }
 
 export default Signinpage
