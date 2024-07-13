@@ -11,6 +11,7 @@ function Signinpage({ setUserLogin }) {
   const [valid, setValid] = useState('')
   const [goLogin, setGoLogin] = useState(true)
   const refValue = useRef(null)
+  const [loading,setLoading]=useState(false);
 
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -18,19 +19,20 @@ function Signinpage({ setUserLogin }) {
 
   const submit = function () {
     if (goLogin && password === repeatPassword && password !== '' && userName != '') {
-      // console.log('called')
+      setLoading(true)
       axios.post(`${BASE_URL}/post-userdata`, {
         username: userName,
         password: password,
       }).then((res) => {
         // console.log(res.data.token)
-        setUserLogin(true)
         setValid(res.data.message)
         Cookies.set('token', res.data.token)
       }).catch((error) => {
         setValid(error.response.data)
       })
+      .finally(()=>{ setLoading(false)})
     } else if (!goLogin && password !== '' && userName != '') {
+      setLoading(true)
       axios.post(`${BASE_URL}/post-login`, {
         username: userName,
         password: password,
@@ -40,11 +42,13 @@ function Signinpage({ setUserLogin }) {
           setValid(res.data.message)
           Cookies.set('token', res.data.token)
           setUserLogin(true)
+          setLoading(true)
         })
         .catch((error) => {
           // console.log(error)
           setValid(error)
         })
+        .finally(()=>{ setLoading(false)})
     }
     else {
       setValid("Invalid Input")
@@ -62,6 +66,12 @@ function Signinpage({ setUserLogin }) {
 
   return (
     <div id='signpage'>
+      {
+        loading && 
+      <div id="loading-bg">
+       <div className="loader"></div>
+      </div>
+      }
       <div className="sign">
         <h1>{goLogin ? "Sign In" : "Login In"}</h1>
         <div className="field">

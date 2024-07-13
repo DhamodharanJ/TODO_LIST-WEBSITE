@@ -18,3 +18,26 @@
     display: flex;
     justify-content: space-between;
 }
+
+
+
+#loading-bg{
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(0, 0, 0, 0.589);
+}
+.loader {
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 5px solid white;
+    border-right-color: rgb(240, 47, 47);
+    animation: l2 0.5s infinite linear;
+  }
+  @keyframes l2 {to{transform: rotate(1turn)}}
