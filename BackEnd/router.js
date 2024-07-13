@@ -11,7 +11,8 @@ config()
 const router = express.Router()
 // token checking method
 const verifyUser = async (req, res, next) => {
-    const token = req.cookies.token;
+    const token = req.headers.authorization;
+    // console.log(token);
     if (!token) {
         return res.status(400).json("Token not available");
     }
@@ -123,14 +124,15 @@ router.post('/post-login', async (req, res) => {
 
         if (passcheck) {
             const token = jwt.sign({ username }, process.env.JWT_SECRET , { expiresIn: "1d" });
-            res.cookie('token', token, { 
-                maxAge: 900000, 
-                httpOnly: true ,
-                secure: true,
-                sameSite: 'Lax'
-        });
+        //     res.cookie('token', token, { 
+        //         maxAge: 900000, 
+        //         httpOnly: true ,
+        //         secure: true,
+        //         sameSite: 'Lax'
+        // });
             // console.log(token)
-            return res.status(200).send("Login Successful");
+            return res.status(200).json({token:token,message:"Login Successful"});
+            
         } else {
             return res.status(400).send("Incorrect Password");
         }

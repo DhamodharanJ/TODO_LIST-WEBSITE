@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 import './App.css'
 // import todoModel from '../../BackEnd/Models/TodoModel';
@@ -14,7 +16,7 @@ function App(props) {
   const BASE_URL=import.meta.env.VITE_BASE_URL;
 
 useEffect(()=>{
-  axios.get(`${BASE_URL}/get-username`,{withCredentials:true})
+  axios.get(`${BASE_URL}/get-username`,{headers:{Authorization : Cookies.get('token')}})
   .then((res)=>{
     setUsername(res.data);
   }).catch((error)=>{
@@ -32,9 +34,8 @@ const {list,setTodoData,loading,setUserLogin} = props
 
         axios.post(`${BASE_URL}/set-data`, {
           list: statement
-        }, { withCredentials: true })
+        },{headers:{Authorization : Cookies.get('token')}})
           .then((res) => {
-            axios.defaults.withCredentials = true;
             setTodoData([...list, res.data])
             setStatement('')
           }).catch((error) => {
@@ -53,7 +54,7 @@ const {list,setTodoData,loading,setUserLogin} = props
       try {
         axios.put(`${BASE_URL}/update-data/${id}`, {
           list: newdata,
-        })
+        },{headers:{Authorization : Cookies.get('token')}})
           .then((res) => {
             console.log(res.data)
             const newList = [...list];
@@ -73,7 +74,7 @@ const {list,setTodoData,loading,setUserLogin} = props
   function deleted(delindex, id) {
 
     try {
-      axios.delete(`${BASE_URL}/delete-data/${id}`).then((res) => {
+      axios.delete(`${BASE_URL}/delete-data/${id}`,{headers:{Authorization : Cookies.get('token')}}).then((res) => {
         const newdata = list.filter((value, index) => { return index !== delindex })
         setTodoData(newdata)
       }).catch((error) => {
@@ -86,13 +87,8 @@ const {list,setTodoData,loading,setUserLogin} = props
     }
   }
 function logout(){
-  axios.get(`${BASE_URL}/user-logout`,{withCredentials:true})
-  .then((res)=>{
-    setUserLogin(false);
-  })
-  .catch((error)=>{
-  })
-  
+Cookies.remove('token')
+setUserLogin(false);
 }
 
   return (

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import '../signin.css'
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function Signinpage({setUserLogin}) {
 
@@ -12,7 +12,6 @@ function Signinpage({setUserLogin}) {
   const [goLogin, setGoLogin] = useState(true)
   const refValue = useRef(null)
 
-  // const navigate=useNavigate();
 
   const BASE_URL = import.meta.env.VITE_BASE_URL;
   // console.log(BASE_URL)
@@ -40,15 +39,16 @@ function Signinpage({setUserLogin}) {
       axios.post(`${BASE_URL}/post-login`,{
         username:userName,
         password:password,
-      },{withCredentials:true})
+      })
       .then((res)=>{
-        setValid(res.data)
-        // navigate('/home')
+        console.log(res.data.token)
+        setValid(res.data.message)  
+        Cookies.set('token',res.data.token)
         setUserLogin(true)
       })
       .catch((error)=>{
         // console.log(error)
-        setValid(error.response.data)
+        setValid(error)
       })
   }
   else {

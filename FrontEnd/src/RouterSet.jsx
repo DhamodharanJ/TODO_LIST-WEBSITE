@@ -3,6 +3,8 @@ import { Routes, Route } from 'react-router-dom'
 import Signinpage from './Components/Signinpage'
 import App from './App'
 import axios from 'axios'
+import Cookies from 'js-cookie';
+
 
 function RouterSet() {
   const [userLogin, setUserLogin] = useState(false)
@@ -12,7 +14,7 @@ function RouterSet() {
   const BASE_URL=import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/get-data`, { withCredentials: true })
+    axios.get(`${BASE_URL}/get-data`, {headers:{Authorization : Cookies.get('token')}})
       .then((res) => {
         setUserLogin(true)
         setLoading(false);
@@ -23,7 +25,7 @@ function RouterSet() {
         setLoading(false);
       })
   }, [userLogin])
-
+ 
 
   return (
     <div>
