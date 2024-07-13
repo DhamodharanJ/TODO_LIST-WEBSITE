@@ -67,8 +67,7 @@ router.put('/update-data/:id', verifyUser, async (req, res) => {
                 list,
             }
         }, { new: true });
-        res.send(data
-        )
+        res.send(data)
     }
     catch (error) {
         res.send(error)

@@ -53,7 +53,7 @@ const {list,setTodoData,loading,setUserLogin} = props
     if (newdata !== '' && newdata != null) {
       try {
         axios.put(`${BASE_URL}/update-data/${id}`, {
-          list: newdata,
+          list: newdata,  
         },{headers:{Authorization : Cookies.get('token')}})
           .then((res) => {
             console.log(res.data)
